@@ -7,7 +7,7 @@ def double_conv(in_c, out_c):
         nn.Conv2d(in_c, out_c, kernel_size=3),
         nn.ReLU(inplace=True),
         nn.Conv2d(out_c, out_c, kernel_size=3),
-        nn.ReLu(inplace=True)
+        nn.ReLU(inplace=True)
     )
     return conv
 
@@ -16,7 +16,7 @@ def crop_img(tensor, target_tensor):
     tensor_size = tensor.size()[2]
     delta = tensor_size	- target_size
     delta = delta // 2
-    return tensor[:, :, delta:tensor_size-delta, delta:tensor_size-delta]
+    return tensor[:, :, delta:target_size+delta, delta:target_size+delta]
 
 
 class UNet(nn.Module):
@@ -24,14 +24,14 @@ class UNet(nn.Module):
     def __init__(self):
         super(UNet, self).__init__()
 
-        self.max_pool__2x2 = nn.MaxPool(kernel_size=2, stride=2)
+        self.max_pool__2x2 = nn.MaxPool2d(kernel_size=2, stride=2)
         self.down_conv_1 = double_conv(1, 64)
         self.down_conv_2 = double_conv(64, 128)
         self.down_conv_3 = double_conv(128, 256)
         self.down_conv_4 = double_conv(256, 512)
         self.down_conv_5 = double_conv(512, 1024)
 
-        self.up_trans_1 = nn.Conv_Transpose2d(
+        self.up_trans_1 = nn.ConvTranspose2d(
             in_channels=1024,
             out_channels=512,
             kernel_size=2,
@@ -40,7 +40,7 @@ class UNet(nn.Module):
 
         self.up_conv_1 = double_conv(1024, 512)
 
-        self.up_trans_2 = nn.Conv_Transpose2d(
+        self.up_trans_2 = nn.ConvTranspose2d(
             in_channels=512,
             out_channels=256,
             kernel_size=2,
@@ -49,7 +49,7 @@ class UNet(nn.Module):
 
         self.up_conv_2 = double_conv(512, 256)
 
-        self.up_trans_3 = nn.Conv_Transpose2d(
+        self.up_trans_3 = nn.ConvTranspose2d(
             in_channels=256,
             out_channels=128,
             kernel_size=2,
@@ -58,7 +58,7 @@ class UNet(nn.Module):
 
         self.up_conv_3 = double_conv(256, 128)
 
-        self.up_trans_4 = nn.Conv_Transpose2d(
+        self.up_trans_4 = nn.ConvTranspose2d(
             in_channels=128,
             out_channels=64,
             kernel_size=2,
@@ -91,19 +91,19 @@ class UNet(nn.Module):
         # decodeer
         x = self.up_trans_1(x9)
         y = crop_img(x7,x)
-        x = self.up_conv_1(torch.cat[x,y], 1)
+        x = self.up_conv_1(torch.cat([x,y], 1))
 
         x = self.up_trans_2(x)
         y = crop_img(x5,x)
-        x = self.up_conv_2(torch.cat[x,y], 1)
+        x = self.up_conv_2(torch.cat([x,y], 1))
 
-        x = self.up_trans_3(x9)
+        x = self.up_trans_3(x)
         y = crop_img(x3,x)
-        x = self.up_conv_3(torch.cat[x,y], 1)
+        x = self.up_conv_3(torch.cat([x,y], 1))
 
-        x = self.up_trans_3(x9)
+        x = self.up_trans_4(x)
         y = crop_img(x1,x)
-        x = self.up_conv_4(torch.cat[x,y], 1)
+        x = self.up_conv_4(torch.cat([x,y], 1))
 
         x = self.out(x)
 
