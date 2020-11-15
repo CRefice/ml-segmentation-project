@@ -19,3 +19,17 @@ Steps:
 2. Train the UNet
 - First, to recognize background/foreground
 - Second, to identify each seperate cell
+
+# GitHub repo as requirement for project
+
+- Create a `requirements.txt` containing all the dependencies for your project (tip: use `pip freeze` before and after)
+- In the `requirements.txt` enter this line if you want to add a GitHub repo as a dependency (for SSH)
+>	git+git://github.com/path/to/package
+
+then
+
+> 	pip install -r requirements.txt
+
+to 'freeze' the requirements for your project:
+
+> 	pip freeze > requirements.txt
