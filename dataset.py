@@ -40,7 +40,8 @@ class CellSegmentationDataset(Dataset):
 
         if self.transform:
             image = self.transform(image)
+
         if self.target_transform:
-            segmentation = self.transform(segmentation)
+            segmentation = self.target_transform(segmentation)
 
         return (image, segmentation)
