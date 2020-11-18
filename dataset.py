@@ -29,7 +29,7 @@ class CellSegmentationDataset(Dataset):
         self.target_transform = target_transform
 
     def __len__(self):
-        return len(self.raw_img_paths)
+        return len(self.raw_img_names)
 
     def __getitem__(self, idx):
         if torch.is_tensor(idx):
