@@ -1,10 +1,7 @@
 import tifffile as tiff
 from pathlib import Path
-import numpy as np
 import torch
-from torch.utils.data import DataSet
-from torchvision import transforms
-from transforms import functional as TF
+from torch.utils.data import Dataset
 
 
 class CellSegmentationDataset(Dataset):
