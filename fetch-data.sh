@@ -6,5 +6,5 @@ if [[ -d dataset ]]; then
 	exit 0
 fi
 curl -o dataset.zip 'https://www.ebi.ac.uk/biostudies/files/S-BSST265/dataset.zip'
-unzip dataset.zip -ddataset
+unzip -q dataset.zip -ddataset
 rm dataset.zip
