@@ -68,7 +68,6 @@ class UNet(nn.Module):
         x7 = self.down_conv_4(x6)
         x8 = self.max_pool__2x2(x7)
         x9 = self.down_conv_5(x8)
-        print(x9.size)
 
         # decodeer
         x = self.up_trans_1(x9)
@@ -88,7 +87,5 @@ class UNet(nn.Module):
         x = self.up_conv_4(torch.cat([x, y], 1))
 
         x = self.out(x)
-
-        print(x.size())
 
         return x
