@@ -4,9 +4,9 @@ import torch.nn as nn
 
 def double_conv(in_c, out_c):
     conv = nn.Sequential(
-        nn.Conv2d(in_c, out_c, kernel_size=3),
+        nn.Conv2d(in_c, out_c, kernel_size=3, padding=1),
         nn.ReLU(inplace=True),
-        nn.Conv2d(out_c, out_c, kernel_size=3),
+        nn.Conv2d(out_c, out_c, kernel_size=3, padding=1),
         nn.ReLU(inplace=True),
     )
     return conv
@@ -55,7 +55,7 @@ class UNet(nn.Module):
 
         self.up_conv_4 = double_conv(128, 64)
 
-        self.out = nn.Conv2d(in_channels=64, out_channels=2, kernel_size=1)
+        self.out = nn.Conv2d(in_channels=64, out_channels=1, kernel_size=1)
 
     def forward(self, image):
         # encoder
