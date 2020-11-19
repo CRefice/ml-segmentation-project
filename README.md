@@ -33,3 +33,12 @@ then
 to 'freeze' the requirements for your project:
 
 > 	pip freeze > requirements.txt
+
+# Todo after meeting 19/11
+- Add Sigmoid / ReLU after last convolution to fix the strange Dice loss behavior
+- Train with bigger images / smaller batch size / more epochs
+- Adapt to 3-class classifier to include the boundary class
+- Do the Train/Test split correctly
+- Experiment with combining Dice with PCE loss
+- Use Adam learning rate for SGD, or perform a GridSearch
+- Use Min/Max normilization in the Transform Lambda
