@@ -55,7 +55,10 @@ class UNet(nn.Module):
 
         self.up_conv_4 = double_conv(128, 64)
 
-        self.out = nn.Conv2d(in_channels=64, out_channels=1, kernel_size=1)
+        self.out = nn.Sequential(
+            nn.Conv2d(in_channels=64, out_channels=1, kernel_size=1),
+            nn.ReLU(inplace=True)
+        )
 
     def forward(self, image):
         # encoder
