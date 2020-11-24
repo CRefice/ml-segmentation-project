@@ -20,75 +20,65 @@ def crop_img(tensor, target_tensor):
     return tensor[:, :, delta : target_size + delta, delta : target_size + delta]
 
 
+def channel_conversion_pairs(in_channels: int, depth: int):
+    out_channels = 64
+    pairs = []
+    for i in range(depth):
+        pairs.append((in_channels, out_channels))
+        in_channels = out_channels
+        out_channels *= 2
+    return pairs
+
+
 class UNet(nn.Module):
-    def __init__(self):
+    def __init__(self, in_channels: int = 1, out_channels: int = 1, depth: int = 5):
         super(UNet, self).__init__()
 
-        self.max_pool__2x2 = nn.MaxPool2d(kernel_size=2, stride=2)
-        self.down_conv_1 = double_conv(1, 64)
-        self.down_conv_2 = double_conv(64, 128)
-        self.down_conv_3 = double_conv(128, 256)
-        self.down_conv_4 = double_conv(256, 512)
-        self.down_conv_5 = double_conv(512, 1024)
+        self.in_channels = in_channels
+        self.out_channels = out_channels
+        self.depth = depth
 
-        self.up_trans_1 = nn.ConvTranspose2d(
-            in_channels=1024, out_channels=512, kernel_size=2, stride=2
+        down_channels = channel_conversion_pairs(in_channels, depth)
+        # Last 64->out_channels convolution is done separately by the "out" layer
+        up_channels = list(reversed(down_channels[1:]))
+
+        self.max_pool = nn.MaxPool2d(kernel_size=2, stride=2)
+        self.down_conv = nn.ModuleList(
+            [double_conv(up, down) for (up, down) in down_channels]
         )
-
-        self.up_conv_1 = double_conv(1024, 512)
-
-        self.up_trans_2 = nn.ConvTranspose2d(
-            in_channels=512, out_channels=256, kernel_size=2, stride=2
+        self.up_conv = nn.ModuleList(
+            [double_conv(down, up) for (up, down) in up_channels]
         )
-
-        self.up_conv_2 = double_conv(512, 256)
-
-        self.up_trans_3 = nn.ConvTranspose2d(
-            in_channels=256, out_channels=128, kernel_size=2, stride=2
+        self.up_trans = nn.ModuleList(
+            [
+                nn.ConvTranspose2d(down, up, kernel_size=2, stride=2)
+                for (up, down) in up_channels
+            ]
         )
-
-        self.up_conv_3 = double_conv(256, 128)
-
-        self.up_trans_4 = nn.ConvTranspose2d(
-            in_channels=128, out_channels=64, kernel_size=2, stride=2
-        )
-
-        self.up_conv_4 = double_conv(128, 64)
-
-        self.out = nn.Sequential(
-            nn.Conv2d(in_channels=64, out_channels=1, kernel_size=1),
-            nn.ReLU(inplace=True)
-        )
+        self.out = nn.Conv2d(64, self.out_channels, kernel_size=1)
 
     def forward(self, image):
-        # encoder
-        x1 = self.down_conv_1(image)
-        x2 = self.max_pool__2x2(x1)
-        x3 = self.down_conv_2(x2)
-        x4 = self.max_pool__2x2(x3)
-        x5 = self.down_conv_3(x4)
-        x6 = self.max_pool__2x2(x5)
-        x7 = self.down_conv_4(x6)
-        x8 = self.max_pool__2x2(x7)
-        x9 = self.down_conv_5(x8)
+        # Downward, "encoding" path
+        x = self.down_conv[0](image)
+        # Collect results of double convolutions in array
+        # for use in the upward path
+        encoded = []
+        for down_conv in self.down_conv[1:]:
+            encoded.append(x)
+            x = self.max_pool(x)
+            x = down_conv(x)
 
-        # decodeer
-        x = self.up_trans_1(x9)
-        y = crop_img(x7, x)
-        x = self.up_conv_1(torch.cat([x, y], 1))
+        # Upward, "decoding" path
+        encoded = reversed(encoded)
+        for (up_conv, up_trans, y) in zip(self.up_conv, self.up_trans, encoded):
+            x = up_trans(x)
+            # Not needed when using "same" padding
+            # y = crop_img(y, x)
+            x = torch.cat([y, x], 1)
+            x = up_conv(x)
+        return self.out(x)
 
-        x = self.up_trans_2(x)
-        y = crop_img(x5, x)
-        x = self.up_conv_2(torch.cat([x, y], 1))
-
-        x = self.up_trans_3(x)
-        y = crop_img(x3, x)
-        x = self.up_conv_3(torch.cat([x, y], 1))
-
-        x = self.up_trans_4(x)
-        y = crop_img(x1, x)
-        x = self.up_conv_4(torch.cat([x, y], 1))
-
-        x = self.out(x)
-
-        return x
+    def predict(self, image, threshold=0.2):
+        logits = self.forward(image)
+        confidence = torch.sigmoid(logits)
+        return confidence > threshold
