@@ -7,7 +7,7 @@ def double_conv(in_c, out_c):
         nn.Conv2d(in_c, out_c, kernel_size=3, padding=1),
         nn.ReLU(inplace=True),
         nn.Conv2d(out_c, out_c, kernel_size=3, padding=1),
-        nn.ReLU(inplace=True)
+        nn.ReLU(inplace=True),
     )
     return conv
 
@@ -56,8 +56,7 @@ class UNet(nn.Module):
             ]
         )
         self.out = nn.Sequential(
-            nn.Conv2d(64, self.out_channels, kernel_size=1),
-            nn.Sigmoid()
+            nn.Conv2d(64, self.out_channels, kernel_size=1), nn.Sigmoid()
         )
 
     def forward(self, image):
@@ -82,6 +81,5 @@ class UNet(nn.Module):
         return self.out(x)
 
     def predict(self, image, threshold=0.2):
-        logits = self.forward(image)
-        confidence = torch.sigmoid(logits)
+        confidence = self.forward(image)
         return confidence > threshold
