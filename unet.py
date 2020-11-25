@@ -7,7 +7,7 @@ def double_conv(in_c, out_c):
         nn.Conv2d(in_c, out_c, kernel_size=3, padding=1),
         nn.ReLU(inplace=True),
         nn.Conv2d(out_c, out_c, kernel_size=3, padding=1),
-        nn.ReLU(inplace=True),
+        nn.ReLU(inplace=True)
     )
     return conv
 
@@ -55,7 +55,10 @@ class UNet(nn.Module):
                 for (up, down) in up_channels
             ]
         )
-        self.out = nn.Conv2d(64, self.out_channels, kernel_size=1)
+        self.out = nn.Sequential(
+            nn.Conv2d(64, self.out_channels, kernel_size=1),
+            nn.Sigmoid()
+        )
 
     def forward(self, image):
         # Downward, "encoding" path
