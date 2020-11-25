@@ -36,9 +36,9 @@ to 'freeze' the requirements for your project:
 
 # Todo after meeting 19/11
 - [x] Add Sigmoid / ReLU after last convolution to fix the strange Dice loss behavior
-- [ ] Train with bigger images / smaller batch size / more epochs
+- [x] Train with bigger images / smaller batch size / more epochs
 - [ ] Adapt to 3-class classifier to include the boundary class
-- [ ] Do the Train/Test split correctly
+- [x] Do the Train/Test split correctly
 - [ ] Experiment with combining Dice with PCE loss
-- [ ] Use Adam learning rate for SGD, or perform a GridSearch
+- [x] Use Adam learning rate for SGD, or perform a GridSearch
 - [x] Use Min/Max normilization in the Transform Lambda
