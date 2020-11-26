@@ -55,9 +55,14 @@ class UNet(nn.Module):
                 for (up, down) in up_channels
             ]
         )
-        self.out = nn.Sequential(
-            nn.Conv2d(64, self.out_channels, kernel_size=1), nn.Sigmoid()
-        )
+        if self.out_channels == 1:
+            self.out = nn.Sequential(
+                nn.Conv2d(64, self.out_channels, kernel_size=1), nn.Sigmoid()
+                )
+        else:
+            self.out = nn.Sequential(
+                nn.Conv2d(64, self.out_channels, kernel_size=1), nn.LogSoftmax()
+                )            
 
     def forward(self, image):
         # Downward, "encoding" path
