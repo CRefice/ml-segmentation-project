@@ -36,11 +36,14 @@ class CellSegmentationDataset(Dataset):
             idx = idx.tolist()
 
         image = tiff.imread(self.raw_img_names[idx])
-        segmentation = tiff.imread(self.ground_truth_names[idx])
+        if image.ndim > 2:
+            # Retrieve only one channel in case image is RGB
+            image = image[..., 0].squeeze()
 
         if self.transform:
             image = self.transform(image)
 
+        segmentation = tiff.imread(self.ground_truth_names[idx])
         if self.target_transform:
             segmentation = self.target_transform(segmentation)
 
