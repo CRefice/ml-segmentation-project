@@ -82,9 +82,11 @@ class UNet(nn.Module):
         return self.out(x)
 
     def predict(self, image, threshold=0.2):
-        outputs = self.forward(image)
-        if self.out_channels > 1:
-            confidence = F.softmax(outputs, dim=1)
-        else:
-            confidence = torch.sigmoid(outputs)
-        return confidence > threshold
+        with torch.no_grad():
+            outputs = self.forward(image)
+            if self.out_channels > 1:
+                confidence = F.softmax(outputs, dim=1)
+            else:
+                confidence = torch.sigmoid(outputs)
+            pred = confidence > threshold
+            return pred.cpu().squeeze()
