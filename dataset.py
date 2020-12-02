@@ -2,6 +2,7 @@ import tifffile as tiff
 from pathlib import Path
 import torch
 from torch.utils.data import Dataset
+from torchvision import transforms
 
 
 class CellSegmentationDataset(Dataset):
@@ -48,3 +49,33 @@ class CellSegmentationDataset(Dataset):
             segmentation = self.target_transform(segmentation)
 
         return (image, segmentation)
+
+
+class PadToSize:
+    """Pad and crop the image in a sample to a given size.
+
+    Args:
+        output_size (tuple or int): Desired output size. If tuple, output is
+            matched to output_size. If int, smaller of image edges is matched
+            to output_size keeping aspect ratio the same.
+    """
+
+    def __init__(self, output_size):
+        assert isinstance(output_size, (int, tuple))
+        if isinstance(output_size, int):
+            self.output_size = (output_size, output_size)
+        else:
+            self.output_size = output_size
+
+    def __call__(self, image):
+        h, w = image.shape[:2]
+
+        padding = [0, 0]
+        if h < self.output_size[0]:
+            padding[0] = (self.output_size[0] - h + 1) // 2
+
+        if w < self.output_size[1]:
+            padding[1] = (self.output_size[1] - w + 1) // 2
+
+        image = transforms.functional.pad(image, padding)
+        return transforms.functional.center_crop(image, self.output_size)
