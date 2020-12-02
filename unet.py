@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 
 def double_conv(in_c, out_c):
@@ -81,8 +82,9 @@ class UNet(nn.Module):
         return self.out(x)
 
     def predict(self, image, threshold=0.2):
+        outputs = self.forward(image)
         if self.out_channels > 1:
-            raise NotImplementedError
+            confidence = F.softmax(outputs, dim=1)
         else:
-            confidence = torch.sigmoid(self.forward(image))
-            return confidence > threshold
+            confidence = torch.sigmoid(outputs)
+        return confidence > threshold
