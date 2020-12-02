@@ -31,11 +31,13 @@ def channel_conversion_pairs(in_channels: int, depth: int):
 
 
 class UNet(nn.Module):
-    def __init__(self, in_channels: int = 1, out_channels: int = 1, depth: int = 5):
+    def __init__(self, in_channels: int = 1, num_classes: int = 2, depth: int = 5):
         super(UNet, self).__init__()
 
         self.in_channels = in_channels
-        self.out_channels = out_channels
+        self.out_channels = num_classes
+        if num_classes == 2:
+            self.out_channels = 1
         self.depth = depth
 
         down_channels = channel_conversion_pairs(in_channels, depth)
@@ -55,7 +57,7 @@ class UNet(nn.Module):
                 for (up, down) in up_channels
             ]
         )
-        self.out = nn.Conv2d(64, self.out_channels, kernel_size=1) 
+        self.out = nn.Conv2d(64, self.out_channels, kernel_size=1)
 
     def forward(self, image):
         # Downward, "encoding" path
@@ -79,5 +81,8 @@ class UNet(nn.Module):
         return self.out(x)
 
     def predict(self, image, threshold=0.2):
-        confidence = self.forward(image)
-        return confidence > threshold
+        if self.out_channels > 1:
+            raise NotImplementedError
+        else:
+            confidence = torch.sigmoid(self.forward(image))
+            return confidence > threshold
