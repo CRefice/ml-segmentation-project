@@ -37,8 +37,23 @@ to 'freeze' the requirements for your project:
 # Todo after meeting 19/11
 - [x] Add Sigmoid / ReLU after last convolution to fix the strange Dice loss behavior
 - [x] Train with bigger images / smaller batch size / more epochs
-- [ ] Adapt to 3-class classifier to include the boundary class
+- [x] Adapt to 3-class classifier to include the boundary class
 - [x] Do the Train/Test split correctly
-- [ ] Experiment with combining Dice with PCE loss
+- [x] Experiment with combining Dice with PCE loss
 - [x] Use Adam learning rate for SGD, or perform a GridSearch
 - [x] Use Min/Max normilization in the Transform Lambda
+
+# Todo after meeting 03/12
+- [ ] Work out the report chapters
+- [ ] Create own implementation of Dice loss which works with our tensors
+- [ ] Fidle around with skikit.find_boundaries (not exact method name)
+- [ ] Modify predict in unet.py to not use thresholding for multiclass case
+- [ ] Figure out how Watershed works and apply it to divide the image in different cells -> to get cell_id's
+- [ ] StarDist
+  - [ ] Running SD on our dataset
+  - [ ] Find out which metric StarDist uses (IoU)
+  - [ ] Compare SD and UNet with multiple classes
+
+Useful links:
+- https://scikit-image.org/docs/dev/auto_examples/segmentation/plot_watershed.html 
+- https://github.com/mpicbg-csbd/stardist/blob/master/extras/stardist_example_2D_colab.ipynb 
