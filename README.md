@@ -45,6 +45,7 @@ to 'freeze' the requirements for your project:
 
 # Todo after meeting 03/12
 - [ ] Work out the report chapters
+- [ ] Start writing
 - [ ] Create own implementation of Dice loss which works with our tensors
 - [ ] Fidle around with skikit.find_boundaries (not exact method name)
 - [ ] Modify predict in unet.py to not use thresholding for multiclass case
