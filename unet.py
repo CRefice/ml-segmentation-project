@@ -85,8 +85,8 @@ class UNet(nn.Module):
         with torch.no_grad():
             outputs = self.forward(image)
             if self.out_channels > 1:
-                confidence = F.softmax(outputs, dim=1)
+                pred = F.softmax(outputs, dim=1)
             else:
                 confidence = torch.sigmoid(outputs)
-            pred = confidence > threshold
+                pred = confidence > threshold
             return pred.cpu().squeeze()
