@@ -46,11 +46,11 @@ to 'freeze' the requirements for your project:
 # Todo after meeting 03/12
 - [ ] Work out the report chapters
 - [ ] Start writing
-- [ ] Create own implementation of Dice loss which works with our tensors
-- [ ] Fidle around with skikit.find_boundaries (not exact method name)
-- [ ] Modify predict in unet.py to not use thresholding for multiclass case
-- [ ] Add weights for the multi-class cross-entropy
-- [ ] Figure out how Watershed works and apply it to divide the image in different cells -> to get cell_id's
+- [X] Create own implementation of Dice loss which works with our tensors
+- [X] Fidle around with skikit.find_boundaries (not exact method name)
+- [X] Modify predict in unet.py to not use thresholding for multiclass case
+- [X] Add weights for the multi-class cross-entropy
+- [X] Figure out how Watershed works and apply it to divide the image in different cells -> to get cell_id's
 - [ ] StarDist
   - [ ] Running SD on our dataset
   - [ ] Find out which metric StarDist uses (IoU)
