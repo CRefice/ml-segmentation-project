@@ -5,6 +5,10 @@ The data isn't stored in this repository to save space. [You can download the da
 # Running the notebook
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/CRefice/ml-segmentation-project/blob/master/notebook.ipynb)
 
+# Running the stardist notebook
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/CRefice/ml-segmentation-project/blob/master/stardist.ipynb)
+
+
 # Roadmap
 
 Goal: Segment biomedical images of cells under a microscope into the seperate cells.
