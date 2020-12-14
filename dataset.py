@@ -77,5 +77,5 @@ class PadToSize:
         if w < self.output_size[1]:
             padding[1] = (self.output_size[1] - w + 1) // 2
 
-        image = transforms.functional.pad(image, padding)
+        image = transforms.functional.pad(image, padding, padding_mode="reflect")
         return transforms.functional.center_crop(image, self.output_size)
