@@ -1,3 +1,5 @@
+import torch
+
 class EarlyStopping(object):
     def __init__(self, mode='min', min_delta=0, patience=10, percentage=False):
         self.mode = mode
