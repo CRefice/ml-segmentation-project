@@ -60,6 +60,12 @@ to 'freeze' the requirements for your project:
   - [ ] Find out which metric StarDist uses (IoU)
   - [ ] Compare SD and UNet with multiple classes
 
+# Todo after The Last Convention
+- [ ] Change the first picture to resemble the two different segmentation types (semantic & instances) to visualize the 'goal'
+- [ ] Train our own Stardist model
+- [ ] Create 3x3 matrix to visualize where the biggest mistakes were made
+- [ ] Get results from matching
+
 Useful links:
 - https://scikit-image.org/docs/dev/auto_examples/segmentation/plot_watershed.html 
 - https://github.com/mpicbg-csbd/stardist/blob/master/extras/stardist_example_2D_colab.ipynb 
