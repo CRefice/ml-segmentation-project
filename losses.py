@@ -99,6 +99,6 @@ def find_class_weights(n_classes, labels):
     n_classes -- Number of distinct classes contained in the labels
     labels -- Iterable over label tensors assigning each pixel to a class number
     """
-    occ = find_occupancies((label for (image, label) in dataset))
+    occ = _find_occupancies(n_classes, labels)
     occ = 1 / occ.sqrt()
     return occ / sum(occ)
