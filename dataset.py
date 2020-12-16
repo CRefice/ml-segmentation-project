@@ -4,7 +4,7 @@ import numpy as np
 import tifffile as tiff
 from skimage.segmentation import find_boundaries
 import torch
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, ConcatDataset
 from torchvision import transforms
 
 
@@ -56,6 +56,42 @@ class CellSegmentationDataset(Dataset):
             segmentation = self.target_transform(segmentation)
 
         return (image, segmentation.squeeze())
+
+
+class AugmentedCellSegmentationDataset(ConcatDataset):
+    def __init__(
+        self,
+        raw_img_dir: Path,
+        ground_truth_dir: Path,
+        augmentations,
+        pattern: str = "",
+        transform=None,
+        target_transform=None,
+    ):
+        """
+        Create an augmented cell segmentation dataset from a given list of augmentations.
+
+        Arguments
+        augmentations -- A list of transformations. Each transformation creates a new copy of the dataset
+                         that is concatenated with the original dataset.
+        All other parameters are the same as for CellSegmentationDataset.
+        """
+        datasets = [
+            CellSegmentationDataset(
+                raw_img_dir,
+                ground_truth_dir,
+                pattern,
+                transforms.Compose([transform, augm]),
+                transforms.Compose([target_transform, augm]),
+            )
+            for augm in augmentations
+        ]
+        datasets.append(
+            CellSegmentationDataset(
+                raw_img_dir, ground_truth_dir, pattern, transform, target_transform
+            )
+        )
+        super().__init__(datasets)
 
 
 class PadToSize:
