@@ -2,6 +2,8 @@ import torch
 import copy
 import time
 
+from eval import evaluate
+
 
 class EarlyStopping:
     def __init__(self, mode="min", min_delta=0, patience=10, percentage=False):
@@ -95,13 +97,10 @@ def train_model(
             optimizer.step()
             epoch_loss += loss.item()
 
-        # scheduler.step()
-
         print("Epoch train loss: {}".format(epoch_loss / epoch_samples))
-        # print("Epoch dice loss: {}".format(epoch_dice_loss / epoch_samples))
 
         # Evaluation phase
-        val_loss = evaluate(model, val_loader, criterion)
+        val_loss = evaluate(device, model, val_loader, criterion)
         if es.step(val_loss):
             break  # early stop criterion is met, we can stop now
 

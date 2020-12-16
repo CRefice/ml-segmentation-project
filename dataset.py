@@ -51,11 +51,11 @@ class CellSegmentationDataset(Dataset):
             image = self.transform(image)
 
         segmentation = tiff.imread(self.ground_truth_names[idx])
-        segmentation = segmentation.squeeze().astype(np.int64)
+        segmentation = segmentation.astype(np.int64)
         if self.target_transform:
             segmentation = self.target_transform(segmentation)
 
-        return (image, segmentation)
+        return (image, segmentation.squeeze())
 
 
 class PadToSize:

@@ -36,8 +36,8 @@ class DiceLoss:
         """
         target = F.one_hot(target).permute(0, 3, 1, 2).contiguous()
         eps = 0.0001
-        inter = batch_dot(output, target)
-        union = batch_sum(output ** 2) + batch_sum(target ** 2) + eps
+        inter = _batch_dot(output, target)
+        union = _batch_sum(output ** 2) + _batch_sum(target ** 2) + eps
         t = (2 * inter.float() + eps) / union.float()
         return 1 - t.mean()
 
