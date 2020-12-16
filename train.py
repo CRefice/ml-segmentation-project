@@ -71,7 +71,6 @@ def train_model(
     Returns:
     Tuple of (model, best validation loss)
     """
-
     best_model_wts = copy.deepcopy(model.state_dict())
     best_loss = float("inf")
     es = EarlyStopping(patience=5)
@@ -89,18 +88,24 @@ def train_model(
 
         torch.cuda.empty_cache()
         for inputs, labels in train_loader:
+            inputs = inputs.to(device)
+            labels = labels.to(device)
             # zero the parameter gradients
             optimizer.zero_grad()
-            outputs = model(inputs.to(device))
-            loss = criterion(outputs, labels.to(device))
+            outputs = model(inputs)
+            loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
             epoch_loss += loss.item()
 
+        # scheduler.step()
+
         print("Epoch train loss: {}".format(epoch_loss / epoch_samples))
+        # print("Epoch dice loss: {}".format(epoch_dice_loss / epoch_samples))
 
         # Evaluation phase
-        val_loss = evaluate(device, model, val_loader, criterion)
+        model.eval()
+        val_loss = evaluate(model, val_loader, criterion)
         if es.step(val_loss):
             break  # early stop criterion is met, we can stop now
 

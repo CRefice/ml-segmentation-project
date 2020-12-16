@@ -55,7 +55,7 @@ class CellSegmentationDataset(Dataset):
         if self.target_transform:
             segmentation = self.target_transform(segmentation)
 
-        return (image, segmentation.squeeze())
+        return (image, segmentation)
 
 
 class AugmentedCellSegmentationDataset(ConcatDataset):
