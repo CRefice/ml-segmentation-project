@@ -115,4 +115,4 @@ class InstanceToThreeClass:
     """
 
     def __call__(self, image):
-        return np.clip(image.clip(max=1) + 2 * find_boundaries(image), 0, 2)
+        return np.clip(image.clip(max=1) + 2 * find_boundaries(image), 0, 2).squeeze()
