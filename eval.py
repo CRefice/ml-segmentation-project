@@ -1,7 +1,7 @@
 import torch
 
 
-def evaluate(model, loader, criterion):
+def evaluate(device, model, loader, criterion):
     """ Evaluate the model on the given data according to the specified criterion. """
     model.eval()
     n_val = len(loader)

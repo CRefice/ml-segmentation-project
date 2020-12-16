@@ -50,11 +50,14 @@ class EarlyStopping:
                 self.is_better = lambda a, best: a > best + (best * min_delta / 100)
 
 
-def train_model(model, optimizer, criterion, train_loader, val_loader, num_epochs=25):
+def train_model(
+    device, model, optimizer, criterion, train_loader, val_loader, num_epochs=25
+):
     """
     Train the model with the given parameters, evaluating it once for each epoch.
 
     Arguments:
+    device -- torch device to run the optimization on (prefer the GPU for this)
     model -- the model to optimize.
     optimizer -- the optimizing algorithm to use.
     criterion -- the loss function to feed to the optimizer.
@@ -83,12 +86,10 @@ def train_model(model, optimizer, criterion, train_loader, val_loader, num_epoch
 
         torch.cuda.empty_cache()
         for inputs, labels in train_loader:
-            inputs = inputs.to(device)
-            labels = labels.to(device)
             # zero the parameter gradients
             optimizer.zero_grad()
-            outputs = model(inputs)
-            loss = criterion(outputs, labels)
+            outputs = model(inputs.to(device))
+            loss = criterion(outputs, labels.to(device))
             loss.backward()
             optimizer.step()
             epoch_loss += loss.item()
