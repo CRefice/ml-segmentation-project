@@ -24,3 +24,31 @@ In the interest of time, however, we recommend using the pre-trained models over
 If you're looking at this README through GitHub (or other MarkDown renderer), you should see a Colab badge below.
 Clicking it will take you directly to the notebook on Colab. (Colab might ask you for authorization to connect to your GitHub account).
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/CRefice/ml-segmentation-project/blob/master/notebook.ipynb)
+
+## Project dependencies
+
+As previously mentioned, running the notebook on Colab should take care of installing the required dependencies, but if running it locally, you'll need to install (at least some of) them yourself.
+Here's a list of required dependencies, along with the latest version number they have been tested with:
+
+- `csbdeep` 0.6.1
+- `gdown` 3.6.4
+- `imagecodecs` 2020.5.30
+- `ipykernel` 4.10.1
+- `ipython` 5.5.0
+- `ipywidgets` 7.5.1
+- `Keras` 2.3.1
+- `Keras-Applications` 1.0.8
+- `Keras-Preprocessing` 1.1.2
+- `matplotlib` 3.2.2
+- `notebook` 5.3.1
+- `numpy` 1.18.5
+- `scikit-image` 0.16.2
+- `scikit-learn` 0.22.2.post1
+- `scipy` 1.4.1
+- `sklearn` 0.0
+- `stardist` 0.6.1
+- `tifffile` 2020.9.3
+- `torch` 1.7.0+cu101
+- `torchsummary` 1.5.1
+- `torchvision` 0.8.1+cu101
+- `tqdm` 4.41.1
