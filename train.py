@@ -6,7 +6,21 @@ from eval import evaluate
 
 
 class EarlyStopping:
+    """ This class stops the training process early when the validation loss is no longer increasing. """
+
     def __init__(self, mode="min", min_delta=0, patience=10, percentage=False):
+        """
+        Create a new EarlyStopping object.
+
+        Arguments:
+        mode -- Either "min" or "max", depending on whether the metric given to step() indicates a better score
+                with a lower or higher value respectively. (Default: "min")
+        min_delta -- Bias to apply to the metric passed to step when determining an improvement. (Default: 0)
+        patience -- The amount of epochs that must pass showing no improvement in orderr for the training to stop. (Default: 10)
+        percentage -- If true, compute improvement delta as a function of a percentage of the best value so far,
+                      instead of absolute difference. (Default: False)
+        """
+
         self.mode = mode
         self.min_delta = min_delta
         self.patience = patience
