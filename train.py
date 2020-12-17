@@ -105,7 +105,7 @@ def train_model(
 
         # Evaluation phase
         model.eval()
-        val_loss = evaluate(model, val_loader, criterion)
+        val_loss = evaluate(device, model, val_loader, criterion)
         if es.step(val_loss):
             break  # early stop criterion is met, we can stop now
 
