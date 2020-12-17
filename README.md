@@ -1,71 +1,26 @@
-# Data acquisition
+# Project structure
 
-The data isn't stored in this repository to save space. [You can download the data through this link.](https://www.ebi.ac.uk/biostudies/files/S-BSST265/dataset.zip) or through the `fetch-data.sh` script included in the repo.
+The project is split up into a python package, containing most of the code for the models, training, and other relevant implementation work,
+and a Jupyter notebook, that will walk you through actually using our code to train/download a model and applying it to the dataset.
 
-# Running the notebook
+## Contents of the code files
+
+- `dataset.py`: Data structures to load, transform and augment the nuclei segmentation dataset, which can be downloaded [through this link.](https://www.ebi.ac.uk/biostudies/files/S-BSST265/dataset.zip) or by running the `fetch-data.sh` script included in this repo.
+- `eval.py`: Functions to evaluate the model's outputs against the ground truth on a validation subset.
+- `grid_search.py`: What we used to optimize the hyperparameters of the model.
+- `losses.py`: Definitions of loss functions used both in the training and evaluation processes.
+- `train.py`: The training algorithm and associated helpers.
+- `unet.py`: Our implementation of a U-Net.
+- `watershed.py`: Helper functions to transform outputs produced by a 2 or 3-class U-Net into instance segmentations through the watershed algorithm.
+
+## Running the notebook
+
+The notebook `notebook.ipynb` can be run locally, but we recommend to run it on Google Colab,
+which offers a free GPU (Just make sure to enable it under "Runtime -> Change Runtime Type")
+
+No manual setup is needed. Simply run the notebook top to bottom to perform all the required setup steps such as downloading the dataset.
+In the interest of time, however, we recommend using the pre-trained models over training your own. The notebook explains how to do so.
+
+If you're looking at this README through GitHub (or other MarkDown renderer), you should see a Colab badge below.
+Clicking it will take you directly to the notebook on Colab. (Colab might ask you for authorization to connect to your GitHub account).
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/CRefice/ml-segmentation-project/blob/master/notebook.ipynb)
-
-# Running the stardist notebook
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/CRefice/ml-segmentation-project/blob/master/stardist.ipynb)
-
-
-# Roadmap
-
-Goal: Segment biomedical images of cells under a microscope into the seperate cells.
-Data:
-- Bunch of TIFFS, Grayscale
-- - Microscope image itself
-- - Labelled with grayscale value, black is background, every other value is a label
-
-Steps:
-1. Read the input data to work with it
-- Transform this data to a form which can be input to the UNet
-2. Train the UNet
-- First, to recognize background/foreground
-- Second, to identify each seperate cell
-
-# GitHub repo as requirement for project
-
-- Create a `requirements.txt` containing all the dependencies for your project (tip: use `pip freeze` before and after)
-- In the `requirements.txt` enter this line if you want to add a GitHub repo as a dependency (for SSH)
->	git+git://github.com/path/to/package
-
-then
-
-> 	pip install -r requirements.txt
-
-to 'freeze' the requirements for your project:
-
-> 	pip freeze > requirements.txt
-
-# Todo after meeting 19/11
-- [x] Add Sigmoid / ReLU after last convolution to fix the strange Dice loss behavior
-- [x] Train with bigger images / smaller batch size / more epochs
-- [x] Adapt to 3-class classifier to include the boundary class
-- [x] Do the Train/Test split correctly
-- [x] Experiment with combining Dice with PCE loss
-- [x] Use Adam learning rate for SGD, or perform a GridSearch
-- [x] Use Min/Max normilization in the Transform Lambda
-
-# Todo after meeting 03/12
-- [ ] Work out the report chapters
-- [ ] Start writing
-- [X] Create own implementation of Dice loss which works with our tensors
-- [X] Fidle around with skikit.find_boundaries (not exact method name)
-- [X] Modify predict in unet.py to not use thresholding for multiclass case
-- [X] Add weights for the multi-class cross-entropy
-- [X] Figure out how Watershed works and apply it to divide the image in different cells -> to get cell_id's
-- [ ] StarDist
-  - [ ] Running SD on our dataset
-  - [ ] Find out which metric StarDist uses (IoU)
-  - [ ] Compare SD and UNet with multiple classes
-
-# Todo after The Last Convention
-- [ ] Change the first picture to resemble the two different segmentation types (semantic & instances) to visualize the 'goal'
-- [ ] Train our own Stardist model
-- [ ] Create 3x3 matrix to visualize where the biggest mistakes were made
-- [ ] Get results from matching
-
-Useful links:
-- https://scikit-image.org/docs/dev/auto_examples/segmentation/plot_watershed.html 
-- https://github.com/mpicbg-csbd/stardist/blob/master/extras/stardist_example_2D_colab.ipynb 
